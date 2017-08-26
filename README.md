@@ -1,4 +1,6 @@
 
+[![Build Status](https://travis-ci.org/tpall/entrezquery.svg?branch=master)](https://travis-ci.org/tpall/entrezquery)
+
 ## Get document summaries from your entrez query 
 
 Run entrez database query. 
