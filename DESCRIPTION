@@ -7,6 +7,7 @@ Imports:
     httr,
     xml2,
     XML
+Suggests: testthat
 Author: Taavi Päll
 Maintainer: Taavi Päll <taavi.pall@credibleinterval.ee>
 Description: Package provides functions to query entrez databases using esearch and esummary APIs. Results are returned conveniently as a tibble.
