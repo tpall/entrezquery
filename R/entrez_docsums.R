@@ -7,6 +7,10 @@
 #' @param db Entrez database. For example "gds" == GEO.
 #' @param retmax Maximum number of records to return, default is 500.
 #' @param ... Further arguments to esearch API.
+#' @examples \notrun{
+#' query <- 'expression profiling by high throughput sequencing[DataSet Type]'
+#' ids <- get_ids(query, db = 'gds', retmax = 10)
+#' }
 #' @return A vector of UIDs.
 #' @export
 #'
