@@ -11,14 +11,21 @@
 #' @export
 #'
 get_ids <- function(query, db, retmax = 500, ...){
+
+  ## Construct API url
   esearch <- "esearch.fcgi"
   base_url <- "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
-  qres <- httr::GET(file.path(base_url, esearch),
-                    query = list(db = db,
-                                 term = query,
-                                 retmax = retmax, ...))
+  url <- file.path(base_url, esearch)
+
+  ## Run GET request
+  qres <- httr::GET(url, query = list(db = db,
+                                      term = query,
+                                      retmax = retmax, ...))
+
+  ## Extract html contents
   rescont <- httr::content(qres)
 
+  ## Extract UIDs
   nids <- xml2::xml_find_first(rescont, xpath = "//Count")
   nids <- xml2::xml_contents(nids)
   nids <- xml2::xml_double(nids)
@@ -35,29 +42,41 @@ get_ids <- function(query, db, retmax = 500, ...){
 
 # get_GEO_DocSums ---------------------------------------------------------
 
-#' @title Get entrez document summaries for UIDs.
-#' @description Returns entrez document summaries for UIDs using esummary API.
+#' @title Run GET request on Entrez database with UIDs.
 #' @param ids Character vector of UIDs.
 #' @param db Entrez database, defaults to "gds" == GEO.
 #' @param ... Further arguments to esummary API.
+#'
+get_qsums <- function(uid, db, ...) {
+
+  ## Construct esummary API url
+  esummary <- "esummary.fcgi"
+  base_url <- "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
+  url <- file.path(base_url, esummary)
+
+  ## Create query id string
+  uid_string <- paste(uid, collapse = ",")
+
+  ## Run GET request
+  httr::GET(url, query = list(db = db, id = uid_string, ...))
+}
+
+#' @title Get entrez document summaries for UIDs.
+#' @description Returns entrez document summaries for UIDs using esummary API.
+#' @inheritParams get_qsums
 #' @return A list of document summaries of class "xml_document" "xml_node"
 #' @export
 #'
 get_docsums <- function(ids, db, ...){
-  esummary <- "esummary.fcgi"
-  base_url <- "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
 
   # Split UIDs into chunks of size max 500
   chunkize <-  function(d, chunksize) split(d, ceiling(seq_along(d)/chunksize))
   UID_chunks <- chunkize(ids, 500)
 
-  get_qsums <- function(uid) {
-    httr::GET(file.path(base_url, esummary),
-              query = list(db = db,
-                           id = paste(uid, collapse = ","), ...))
-  }
+  ## Run query chunkwise
+  qsums <- lapply(UID_chunks, get_qsums, db = db)
 
-  qsums <- lapply(UID_chunks, get_qsums)
+  ## Extract html content from query results
   lapply(qsums, httr::content)
 }
 
