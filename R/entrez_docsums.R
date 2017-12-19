@@ -7,14 +7,15 @@
 #' @param db Entrez database. For example "gds" == GEO.
 #' @param retmax Maximum number of records to return, default is 500.
 #' @param ... Further arguments to esearch API.
-#' @examples \dontrun{
+#' @examples
+#' \dontrun{
 #' query <- 'expression profiling by high throughput sequencing[DataSet Type]'
 #' ids <- get_ids(query, db = 'gds', retmax = 10)
 #' }
 #' @return A vector of UIDs.
 #' @export
 #'
-get_ids <- function(query, db, retmax = 500, ...){
+get_ids <- function(query, db, retmax = 500, ...) {
 
   ## Construct API url
   esearch <- "esearch.fcgi"
@@ -34,8 +35,8 @@ get_ids <- function(query, db, retmax = 500, ...){
   nids <- xml2::xml_contents(nids)
   nids <- xml2::xml_double(nids)
 
-  if(nids==0){
-    stop("Query found no results", call.=FALSE)
+  if (nids == 0) {
+    stop("Query found no results", call. = FALSE)
   } else {
     message(sprintf("Query found %s results, retrieving max %s.", nids, retmax))
   }
@@ -72,7 +73,7 @@ get_qsums <- function(uid, db, ...) {
 #' @return A list of document summaries of class "xml_document" "xml_node"
 #' @export
 #'
-get_docsums <- function(uid, db, ...){
+get_docsums <- function(uid, db, ...) {
 
   # Split UIDs into chunks of size max 500
   UID_chunks <- split(uid, ceiling(seq_along(uid) / 500))
@@ -92,7 +93,7 @@ get_docsums <- function(uid, db, ...){
 #' @param xmldoc A GEO query result contents, list of document summaries of class "xml_document" "xml_node"
 #' @return A tibble of GEO document summaries
 #'
-extract_docsums <- function(xmldoc){
+extract_docsums <- function(xmldoc) {
 
   ## Parse xml
   d <- XML::xmlParse(xmldoc)
@@ -113,30 +114,42 @@ extract_docsums <- function(xmldoc){
 }
 
 #' @title Query entrez database.
-#' @description Run entrez database query. Wrapper around entrez esearch and esummary tools. Returns document summaries for query Ids.
-#' @inheritParams get_ids
+#' @description Run entrez database query. Returns document summaries for query Ids. Wrapper around entrez esearch and esummary tools.
+#' @param query A GEO query string (optional).
+#' @param uid Character vector of UIDs (optional).
+#' @param db Entrez database. For example "gds" == GEO.
+#' @param retmax Maximum number of records to return, default is 500.
 #' @param ... Further arguments to esearch and esummary APIs.
 #' @examples
 #' \dontrun{
 #' query <- "expression profiling by high throughput sequencing[DataSet Type]"
-#' qres <- entrez_docsums(query, db = 'gds', retmax = 10)
+#' qres <- entrez_docsums(query = query, db = 'gds', retmax = 10)
 #' }
 #' @return a data_frame. Returns document summaries for query Ids.
 #' @export
 #'
-entrez_docsums <- function(query, db = "gds", retmax = 500, ...) {
+entrez_docsums <- function(query = NULL, uid = NULL, db = "gds", retmax = 500, ...) {
 
-  ## get Ids
-  ids <- get_ids(query, db = db, retmax = retmax, ...)
+  if (is.null(query) && is.null(uid)) {
+    stop("Either GEO query string or UID must be specified.")
+  }
 
-  ## Get query summaries
-  sumcont <- get_docsums(ids = ids, db = db, ...)
+  if (!is.null(query) && !is.null(uid)) {
+    stop("Only one of GEO query string or UID must be specified.")
+  }
 
-  ## Extract document summaries.
-  ## Gateway error in previous step may fuck up this step!!!,
-  ## if this occurs, please just rerun.
+  # get Ids
+  if (!is.null(query)) {
+  uid <- get_ids(query, db = db, retmax = retmax, ...)
+  }
+
+  # Get query summaries
+  sumcont <- get_docsums(uid = uid, db = db, ...)
+
+  # Extract document summaries.
+  # Gateway error in previous step may fuck up this step!!!,
+  # if this occurs, please just rerun.
   docsums <- lapply(sumcont, extract_docsums)
-  docsums <- dplyr::bind_rows(docsums)
-  return(docsums)
+  dplyr::bind_rows(docsums)
 }
 

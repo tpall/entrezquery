@@ -4,10 +4,12 @@
 \alias{entrez_docsums}
 \title{Query entrez database.}
 \usage{
-entrez_docsums(query, db = "gds", retmax = 500, ...)
+entrez_docsums(query = NULL, uid = NULL, db = "gds", retmax = 500, ...)
 }
 \arguments{
-\item{query}{A GEO query string}
+\item{query}{A GEO query string (optional).}
+
+\item{uid}{Character vector of UIDs (optional).}
 
 \item{db}{Entrez database. For example "gds" == GEO.}
 
@@ -19,11 +21,11 @@ entrez_docsums(query, db = "gds", retmax = 500, ...)
 a data_frame. Returns document summaries for query Ids.
 }
 \description{
-Run entrez database query. Wrapper around entrez esearch and esummary tools. Returns document summaries for query Ids.
+Run entrez database query. Returns document summaries for query Ids. Wrapper around entrez esearch and esummary tools.
 }
 \examples{
 \dontrun{
 query <- "expression profiling by high throughput sequencing[DataSet Type]"
-qres <- entrez_docsums(query, db = 'gds', retmax = 10)
+qres <- entrez_docsums(query = query, db = 'gds', retmax = 10)
 }
 }
