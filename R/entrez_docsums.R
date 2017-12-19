@@ -44,7 +44,7 @@ get_ids <- function(query, db, retmax = 500, ...){
   xml2::xml_text(rescont)
 }
 
-# get_GEO_DocSums ---------------------------------------------------------
+# get_docsums -------------------------------------------------------
 
 #' @title Run GET request on Entrez database with UIDs.
 #' @param ids Character vector of UIDs.
