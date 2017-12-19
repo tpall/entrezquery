@@ -7,7 +7,7 @@
 #' @param db Entrez database. For example "gds" == GEO.
 #' @param retmax Maximum number of records to return, default is 500.
 #' @param ... Further arguments to esearch API.
-#' @examples \notrun{
+#' @examples \dontrun{
 #' query <- 'expression profiling by high throughput sequencing[DataSet Type]'
 #' ids <- get_ids(query, db = 'gds', retmax = 10)
 #' }
@@ -47,6 +47,7 @@ get_ids <- function(query, db, retmax = 500, ...){
 # get_GEO_DocSums ---------------------------------------------------------
 
 #' @title Run GET request on Entrez database with UIDs.
+#' @description Runs entrez query using esummary API, returns html response.
 #' @param uid Character vector of UIDs.
 #' @param db Entrez database, defaults to "gds" == GEO.
 #' @param ... Further arguments to esummary API.
@@ -74,8 +75,7 @@ get_qsums <- function(uid, db, ...) {
 get_docsums <- function(uid, db, ...){
 
   # Split UIDs into chunks of size max 500
-  chunkize <-  function(d, chunksize) split(d, ceiling(seq_along(d)/chunksize))
-  UID_chunks <- chunkize(ids, 500)
+  UID_chunks <- split(uid, ceiling(seq_along(uid) / 500))
 
   ## Run query chunkwise
   qsums <- lapply(UID_chunks, get_qsums, db = db)

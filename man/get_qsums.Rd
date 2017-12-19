@@ -13,3 +13,6 @@ get_qsums(uid, db, ...)
 
 \item{...}{Further arguments to esummary API.}
 }
+\description{
+Runs entrez query using esummary API, returns html response.
+}

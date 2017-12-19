@@ -22,7 +22,7 @@ A vector of UIDs.
 Runs entrez search using esearch API and returns UIDs.
 }
 \examples{
-\\notrun{
+\dontrun{
 query <- 'expression profiling by high throughput sequencing[DataSet Type]'
 ids <- get_ids(query, db = 'gds', retmax = 10)
 }
