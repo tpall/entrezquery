@@ -91,6 +91,7 @@ get_docsums <- function(ids, db, ...){
 #' @description Extracts entrez esummary API results from XML into tibble.
 #' @param xmldoc A GEO query result contents, list of document summaries of class "xml_document" "xml_node"
 #' @return A tibble of GEO document summaries
+#' @export
 #'
 extract_docsums <- function(xmldoc){
 
