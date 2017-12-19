@@ -19,7 +19,7 @@ entrez_docsums(query, db = "gds", retmax = 500, ...)
 a data_frame. Returns document summaries for query Ids.
 }
 \description{
-Run entrez database query. Wrapper around esearch and esummary tool. Returns document summaries for query Ids.
+Run entrez database query. Wrapper around entrez esearch and esummary tools. Returns document summaries for query Ids.
 }
 \examples{
 \dontrun{

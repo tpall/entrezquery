@@ -21,3 +21,9 @@ A vector of UIDs.
 \description{
 Runs entrez search using esearch API and returns UIDs.
 }
+\examples{
+\\notrun{
+query <- 'expression profiling by high throughput sequencing[DataSet Type]'
+ids <- get_ids(query, db = 'gds', retmax = 10)
+}
+}
