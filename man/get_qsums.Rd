@@ -7,9 +7,9 @@
 get_qsums(uid, db, ...)
 }
 \arguments{
+\item{uid}{Character vector of UIDs.}
+
 \item{db}{Entrez database, defaults to "gds" == GEO.}
 
 \item{...}{Further arguments to esummary API.}
-
-\item{ids}{Character vector of UIDs.}
 }

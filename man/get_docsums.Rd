@@ -4,10 +4,10 @@
 \alias{get_docsums}
 \title{Get entrez document summaries for UIDs.}
 \usage{
-get_docsums(ids, db, ...)
+get_docsums(uid, db, ...)
 }
 \arguments{
-\item{ids}{Character vector of UIDs.}
+\item{uid}{Character vector of UIDs.}
 
 \item{db}{Entrez database, defaults to "gds" == GEO.}
 

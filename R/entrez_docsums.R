@@ -47,7 +47,7 @@ get_ids <- function(query, db, retmax = 500, ...){
 # get_GEO_DocSums ---------------------------------------------------------
 
 #' @title Run GET request on Entrez database with UIDs.
-#' @param ids Character vector of UIDs.
+#' @param uid Character vector of UIDs.
 #' @param db Entrez database, defaults to "gds" == GEO.
 #' @param ... Further arguments to esummary API.
 #'
@@ -71,7 +71,7 @@ get_qsums <- function(uid, db, ...) {
 #' @return A list of document summaries of class "xml_document" "xml_node"
 #' @export
 #'
-get_docsums <- function(ids, db, ...){
+get_docsums <- function(uid, db, ...){
 
   # Split UIDs into chunks of size max 500
   chunkize <-  function(d, chunksize) split(d, ceiling(seq_along(d)/chunksize))
