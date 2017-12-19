@@ -44,7 +44,7 @@ get_ids <- function(query, db, retmax = 500, ...){
   xml2::xml_text(rescont)
 }
 
-# get_docsums -------------------------------------------------------
+# get_GEO_DocSums ---------------------------------------------------------
 
 #' @title Run GET request on Entrez database with UIDs.
 #' @param ids Character vector of UIDs.
@@ -91,7 +91,6 @@ get_docsums <- function(ids, db, ...){
 #' @description Extracts entrez esummary API results from XML into tibble.
 #' @param xmldoc A GEO query result contents, list of document summaries of class "xml_document" "xml_node"
 #' @return A tibble of GEO document summaries
-#' @export
 #'
 extract_docsums <- function(xmldoc){
 
