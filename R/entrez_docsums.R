@@ -1,18 +1,24 @@
 
-# get_GEO_Ids -------------------------------------------------------------
-
 #' @title Get UID vector
+#'
 #' @description Runs entrez search using esearch API and returns UIDs.
-#' @param query A GEO query string
+#'
+#' @param query A GEO query string.
 #' @param db Entrez database. For example "gds" == GEO.
 #' @param retmax Maximum number of records to return, default is 500.
 #' @param ... Further arguments to esearch API.
+#'
 #' @examples
 #' \dontrun{
 #' query <- 'expression profiling by high throughput sequencing[DataSet Type]'
 #' ids <- get_ids(query, db = 'gds', retmax = 10)
 #' }
+#'
 #' @return A vector of UIDs.
+#'
+#' @import httr
+#' @import xml2
+#'
 #' @export
 #'
 get_ids <- function(query, db, retmax = 500, ...) {
@@ -38,20 +44,22 @@ get_ids <- function(query, db, retmax = 500, ...) {
   if (nids == 0) {
     stop("Query found no results", call. = FALSE)
   } else {
-    message(sprintf("Query found %s results, retrieving max %s.", nids, retmax))
+    message(sprintf("Query found %s results, retrieving max %s", nids, retmax))
   }
 
   rescont <- xml2::xml_find_all(rescont, xpath = "//Id")
   xml2::xml_text(rescont)
 }
 
-# get_GEO_DocSums ---------------------------------------------------------
-
-#' @title Run GET request on Entrez database with UIDs.
-#' @description Runs entrez query using esummary API, returns html response.
-#' @param uid Character vector of UIDs.
-#' @param db Entrez database, defaults to "gds" == GEO.
-#' @param ... Further arguments to esummary API.
+#'@title Run GET request on Entrez database with UIDs.
+#'
+#'@description Runs entrez query using esummary API, returns html response.
+#'
+#'@param uid Character vector of UIDs.
+#'@param db Entrez database, defaults to "gds" == GEO.
+#'@param ... Further arguments to esummary API.
+#'
+#'@import httr
 #'
 get_qsums <- function(uid, db, ...) {
 
@@ -67,10 +75,14 @@ get_qsums <- function(uid, db, ...) {
   httr::GET(url, query = list(db = db, id = uid_string, ...))
 }
 
-#' @title Get entrez document summaries for UIDs.
+#' @title Get entrez document summaries for UIDs
+#'
 #' @description Returns entrez document summaries for UIDs using esummary API.
+#'
 #' @inheritParams get_qsums
-#' @return A list of document summaries of class "xml_document" "xml_node"
+#' @return A list of document summaries of class "xml_document" "xml_node".
+#'
+#' @import httr
 #' @export
 #'
 get_docsums <- function(uid, db, ...) {
@@ -85,13 +97,15 @@ get_docsums <- function(uid, db, ...) {
   lapply(qsums, httr::content)
 }
 
-
-# extract_gds_docsums -----------------------------------------------------
-
 #' @title Extract GEO DocSums into tibble
+#'
 #' @description Extracts entrez esummary API results from XML into tibble.
-#' @param xmldoc A GEO query result contents, list of document summaries of class "xml_document" "xml_node"
-#' @return A tibble of GEO document summaries
+#'
+#' @param xmldoc A GEO query result contents, list of document summaries of class "xml_document" "xml_node".
+#'
+#' @return A tibble of GEO document summaries.
+#' @import XML
+#' @import dplyr
 #'
 extract_docsums <- function(xmldoc) {
 
@@ -113,29 +127,35 @@ extract_docsums <- function(xmldoc) {
   return(d)
 }
 
-#' @title Query entrez database.
+#' @title Query entrez database
+#'
 #' @description Run entrez database query. Returns document summaries for query Ids. Wrapper around entrez esearch and esummary tools.
+#'
 #' @param query A GEO query string (optional).
 #' @param uid Character vector of UIDs (optional).
 #' @param db Entrez database. For example "gds" == GEO.
 #' @param retmax Maximum number of records to return, default is 500.
 #' @param ... Further arguments to esearch and esummary APIs.
+#'
 #' @examples
 #' \dontrun{
 #' query <- "expression profiling by high throughput sequencing[DataSet Type]"
 #' qres <- entrez_docsums(query = query, db = 'gds', retmax = 10)
 #' }
 #' @return a data_frame. Returns document summaries for query Ids.
+#'
+#' @import dplyr
+#'
 #' @export
 #'
 entrez_docsums <- function(query = NULL, uid = NULL, db = "gds", retmax = 500, ...) {
 
   if (is.null(query) && is.null(uid)) {
-    stop("Either GEO query string or UID must be specified.")
+    stop("Either GEO query string or UID must be specified")
   }
 
   if (!is.null(query) && !is.null(uid)) {
-    stop("Only one of GEO query string or UID must be specified.")
+    stop("Only one of GEO query string or UID must be specified")
   }
 
   # get Ids
@@ -152,4 +172,3 @@ entrez_docsums <- function(query = NULL, uid = NULL, db = "gds", retmax = 500, .
   docsums <- lapply(sumcont, extract_docsums)
   dplyr::bind_rows(docsums)
 }
-
