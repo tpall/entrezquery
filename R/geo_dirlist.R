@@ -66,6 +66,7 @@ munge_dirlist <- function(x) {
 #' @param gsefiles GEO file names, starting with Accession number, a character vector.
 #' @param dest Path to local folder where downloaded files will be stored, a character string. Defaults to current directory.
 #' @param verbose Defaults to FALSE.
+#' @param sleep sleep between queries in seconds, a double.
 #'
 #' @examples \dontrun{
 #' c("GSE100206_family.xml.tgz",
@@ -79,7 +80,7 @@ munge_dirlist <- function(x) {
 #'
 #' @export
 #'
-download_gsefiles <- function(gsefiles, dest = ".", verbose = FALSE) {
+download_gsefiles <- function(gsefiles, dest = ".", verbose = FALSE, sleep = 0.25) {
 
   # Extract GEO Accession from filenames
   Accession <- unique(stringr::str_extract(gsefiles, "GSE[0-9]+"))
@@ -111,10 +112,10 @@ download_gsefiles <- function(gsefiles, dest = ".", verbose = FALSE) {
   }
 
   # Create connection and get files to dest dir
-  cc <- Async$new(urls = file.path(ftplink, filepath))
-  cc$get(disk = file.path(dest, filepath), verbose = verbose)
+  con <- Async$new(urls = file.path(ftplink, filepath))
+  con$get(disk = file.path(dest, filepath), verbose = verbose)
+  Sys.sleep(sleep)
 }
-
 
 #' @title Download file list from Entrez GEO repository ftp directory
 #'

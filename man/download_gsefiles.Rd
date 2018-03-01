@@ -4,7 +4,7 @@
 \alias{download_gsefiles}
 \title{Download files from Entrez GEO repository}
 \usage{
-download_gsefiles(gsefiles, dest = ".", verbose = FALSE)
+download_gsefiles(gsefiles, dest = ".", verbose = FALSE, sleep = 0.25)
 }
 \arguments{
 \item{gsefiles}{GEO file names, starting with Accession number, a character vector.}
@@ -12,6 +12,8 @@ download_gsefiles(gsefiles, dest = ".", verbose = FALSE)
 \item{dest}{Path to local folder where downloaded files will be stored, a character string. Defaults to current directory.}
 
 \item{verbose}{Defaults to FALSE.}
+
+\item{sleep}{sleep between queries in seconds, a double.}
 }
 \description{
 Downloads supplementary or MINiML formatted family files from Entrez GEO repository.
