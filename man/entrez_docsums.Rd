@@ -2,7 +2,7 @@
 % Please edit documentation in R/entrez_docsums.R
 \name{entrez_docsums}
 \alias{entrez_docsums}
-\title{Query entrez database.}
+\title{Query entrez database}
 \usage{
 entrez_docsums(query = NULL, uid = NULL, db = "gds", retmax = 500, ...)
 }

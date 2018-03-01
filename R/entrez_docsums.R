@@ -16,8 +16,8 @@
 #'
 #' @return A vector of UIDs.
 #'
-#' @import httr
-#' @import xml2
+#' @importFrom httr GET content
+#' @importFrom xml2 xml_find_first xml_contents xml_double xml_find_all xml_text
 #'
 #' @export
 #'
@@ -51,15 +51,15 @@ get_ids <- function(query, db, retmax = 500, ...) {
   xml2::xml_text(rescont)
 }
 
-#'@title Run GET request on Entrez database with UIDs.
+#' @title Run GET request on Entrez database with UIDs.
 #'
-#'@description Runs entrez query using esummary API, returns html response.
+#' @description Runs entrez query using esummary API, returns html response.
 #'
-#'@param uid Character vector of UIDs.
-#'@param db Entrez database, defaults to "gds" == GEO.
-#'@param ... Further arguments to esummary API.
+#' @param uid Character vector of UIDs.
+#' @param db Entrez database, defaults to "gds" == GEO.
+#' @param ... Further arguments to esummary API.
 #'
-#'@import httr
+#' @importFrom httr GET
 #'
 get_qsums <- function(uid, db, ...) {
 
@@ -82,7 +82,7 @@ get_qsums <- function(uid, db, ...) {
 #' @inheritParams get_qsums
 #' @return A list of document summaries of class "xml_document" "xml_node".
 #'
-#' @import httr
+#' @importFrom httr content
 #' @export
 #'
 get_docsums <- function(uid, db, ...) {
@@ -104,8 +104,8 @@ get_docsums <- function(uid, db, ...) {
 #' @param xmldoc A GEO query result contents, list of document summaries of class "xml_document" "xml_node".
 #'
 #' @return A tibble of GEO document summaries.
-#' @import XML
-#' @import dplyr
+#' @importFrom XML xmlParse xmlRoot xmlSApply getChildrenStrings
+#' @importFrom dplyr as_data_frame
 #'
 extract_docsums <- function(xmldoc) {
 
@@ -144,7 +144,7 @@ extract_docsums <- function(xmldoc) {
 #' }
 #' @return a data_frame. Returns document summaries for query Ids.
 #'
-#' @import dplyr
+#' @importFrom dplyr bind_rows
 #'
 #' @export
 #'

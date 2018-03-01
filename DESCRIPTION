@@ -1,10 +1,16 @@
 Package: entrezquery
 Type: Package
 Title: Runs entrez query and returns reults as a tibble
-Version: 0.1.0
+Version: 0.2.0.9999
 Imports: 
     dplyr,
+    tidyr,
+    readr,
+    purrr,
     httr,
+    crul,
+    stringr,
+    lubridate,
     xml2,
     XML
 Suggests: testthat

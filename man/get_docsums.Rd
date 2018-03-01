@@ -2,7 +2,7 @@
 % Please edit documentation in R/entrez_docsums.R
 \name{get_docsums}
 \alias{get_docsums}
-\title{Get entrez document summaries for UIDs.}
+\title{Get entrez document summaries for UIDs}
 \usage{
 get_docsums(uid, db, ...)
 }
@@ -14,7 +14,7 @@ get_docsums(uid, db, ...)
 \item{...}{Further arguments to esummary API.}
 }
 \value{
-A list of document summaries of class "xml_document" "xml_node"
+A list of document summaries of class "xml_document" "xml_node".
 }
 \description{
 Returns entrez document summaries for UIDs using esummary API.

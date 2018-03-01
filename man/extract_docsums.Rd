@@ -7,10 +7,10 @@
 extract_docsums(xmldoc)
 }
 \arguments{
-\item{xmldoc}{A GEO query result contents, list of document summaries of class "xml_document" "xml_node"}
+\item{xmldoc}{A GEO query result contents, list of document summaries of class "xml_document" "xml_node".}
 }
 \value{
-A tibble of GEO document summaries
+A tibble of GEO document summaries.
 }
 \description{
 Extracts entrez esummary API results from XML into tibble.
