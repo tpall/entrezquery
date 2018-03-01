@@ -88,12 +88,12 @@ download_gsefiles <- function(gsefiles, dest = ".", verbose = FALSE) {
 
   # Compose ftp link
   ftplink <- file.path("ftp://ftp.ncbi.nlm.nih.gov/geo/series",
-                       sub("[0-9]{3}$", "nnn", Accession),
+                       gsub("\\d{3}$", "nnn", Accession),
                        Accession)
 
   # Update file paths with subdir names
-  filepath <- dplyr::if_else(stringr::str_detect(gsefiles, "family.xml.tgz$"),
-                      file.path("miniml", gsefiles),
+  filepath <- dplyr::if_else(stringr::str_detect(gsefiles, "family.soft.gz$"),
+                      file.path("soft", gsefiles),
                       file.path("suppl", gsefiles))
 
   # Test if files exist locally
@@ -136,11 +136,11 @@ get_dirlist <- function(Accession) {
   ftplink <- file.path("ftp://ftp.ncbi.nlm.nih.gov/geo/series",
                        sub("[0-9]{3}$", "nnn", Accession),
                        Accession)
-  cc <- Async$new(urls = file.path(ftplink, c("miniml/", "suppl/")))
+  cc <- Async$new(urls = file.path(ftplink, c("soft/", "suppl/")))
   res <- cc$get()
   purrr::map(res, ~.x$parse("UTF-8")) %>%
     purrr::map(munge_dirlist) %>%
-    purrr::set_names(c("miniml", "suppl")) %>%
+    purrr::set_names(c("soft", "suppl")) %>%
     dplyr::bind_rows(.id = "type")
 }
 
