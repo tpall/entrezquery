@@ -106,7 +106,7 @@ download_gsefiles <- function(gsefiles, dest = ".", verbose = FALSE) {
   }
 
   cc <- Async$new(urls = file.path(ftplink, filepath))
-  cc$get(disk = filepath, verbose = verbose)
+  cc$get(disk = file.path(dest, basename(filepath)), verbose = verbose)
 }
 
 
