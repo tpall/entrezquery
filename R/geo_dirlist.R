@@ -81,32 +81,38 @@ munge_dirlist <- function(x) {
 #'
 download_gsefiles <- function(gsefiles, dest = ".", verbose = FALSE) {
 
+  # Extract GEO Accession from filenames
   Accession <- unique(stringr::str_extract(gsefiles, "GSE[0-9]+"))
 
   if (length(Accession) != 1) stop("Supply one Accession")
 
+  # Compose ftp link
   ftplink <- file.path("ftp://ftp.ncbi.nlm.nih.gov/geo/series",
                        sub("[0-9]{3}$", "nnn", Accession),
                        Accession)
 
-  filepath <- dplyr::if_else(stringr::str_detect(gsefiles, "family"),
+  # Update file paths with subdir names
+  filepath <- dplyr::if_else(stringr::str_detect(gsefiles, "family.xml.tgz$"),
                       file.path("miniml", gsefiles),
                       file.path("suppl", gsefiles))
 
+  # Test if files exist locally
   localfiles <- file.exists(file.path(dest, filepath))
   filepath <- filepath[!localfiles]
 
   if (identical(filepath, character(0))) stop("Files exist")
 
+  # Test if dest dir is present and create if not
   dirs <- unique(dirname(filepath))
-  dest <- file.path(dest, dirs)
+  destdirs <- file.path(dest, dirs)
 
-  if (!any(dir.exists(dest))) {
-    sapply(dest[!dir.exists(dest)], dir.create, recursive = TRUE)
+  if (!any(dir.exists(destdirs))) {
+    sapply(destdirs[!dir.exists(destdirs)], dir.create, recursive = TRUE)
   }
 
+  # Create connection and get files to dest dir
   cc <- Async$new(urls = file.path(ftplink, filepath))
-  cc$get(disk = file.path(dest, basename(filepath)), verbose = verbose)
+  cc$get(disk = file.path(dest, filepath), verbose = verbose)
 }
 
 
