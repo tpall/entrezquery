@@ -47,6 +47,7 @@ download_gsefile <- function(gsefile, dest = ".", verbose = FALSE) {
   }
 
   # Create connection and get files to dest dir
-  con <- HttpClient$new(url = file.path(ftplink, filepath))
-  con$get(disk = file.path(dest, filepath), verbose = verbose)
+  x <- HttpClient$new(url = file.path(ftplink, filepath))
+  x$get(disk = file.path(dest, filepath), verbose = verbose)
+  closeAllConnections()
 }

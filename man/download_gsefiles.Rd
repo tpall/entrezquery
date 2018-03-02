@@ -4,7 +4,7 @@
 \alias{download_gsefiles}
 \title{Download files from Entrez GEO repository}
 \usage{
-download_gsefiles(gsefiles, dest = ".", verbose = FALSE, sleep = 0.25)
+download_gsefiles(gsefiles, dest = ".", verbose = FALSE)
 }
 \arguments{
 \item{gsefiles}{GEO file names, starting with Accession number, a character vector.}

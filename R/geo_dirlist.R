@@ -80,7 +80,7 @@ munge_dirlist <- function(x) {
 #'
 #' @export
 #'
-download_gsefiles <- function(gsefiles, dest = ".", verbose = FALSE, sleep = 0.25) {
+download_gsefiles <- function(gsefiles, dest = ".", verbose = FALSE) {
 
   # Extract GEO Accession from filenames
   Accession <- unique(stringr::str_extract(gsefiles, "GSE[0-9]+"))
@@ -94,8 +94,8 @@ download_gsefiles <- function(gsefiles, dest = ".", verbose = FALSE, sleep = 0.2
 
   # Update file paths with subdir names
   filepath <- dplyr::if_else(stringr::str_detect(gsefiles, "family.soft.gz$"),
-                      file.path("soft", gsefiles),
-                      file.path("suppl", gsefiles))
+                             file.path("soft", gsefiles),
+                             file.path("suppl", gsefiles))
 
   # Test if files exist locally
   localfiles <- file.exists(file.path(dest, filepath))
@@ -112,9 +112,14 @@ download_gsefiles <- function(gsefiles, dest = ".", verbose = FALSE, sleep = 0.2
   }
 
   # Create connection and get files to dest dir
-  con <- Async$new(urls = file.path(ftplink, filepath))
-  con$get(disk = file.path(dest, filepath), verbose = verbose)
-  Sys.sleep(sleep)
+  if (length(filepath) == 1) {
+    x <- HttpClient$new(url = file.path(ftplink, filepath))
+  } else {
+    x <- Async$new(urls = file.path(ftplink, filepath))
+  }
+
+  x$get(disk = file.path(dest, filepath), verbose = verbose)
+  closeAllConnections()
 }
 
 #' @title Download file list from Entrez GEO repository ftp directory
