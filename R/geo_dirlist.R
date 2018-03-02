@@ -66,7 +66,6 @@ munge_dirlist <- function(x) {
 #' @param gsefiles GEO file names, starting with Accession number, a character vector.
 #' @param dest Path to local folder where downloaded files will be stored, a character string. Defaults to current directory.
 #' @param verbose Defaults to FALSE.
-#' @param sleep sleep between queries in seconds, a double.
 #'
 #' @examples \dontrun{
 #' c("GSE100206_family.xml.tgz",

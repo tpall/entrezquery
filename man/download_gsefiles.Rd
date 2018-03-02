@@ -12,8 +12,6 @@ download_gsefiles(gsefiles, dest = ".", verbose = FALSE)
 \item{dest}{Path to local folder where downloaded files will be stored, a character string. Defaults to current directory.}
 
 \item{verbose}{Defaults to FALSE.}
-
-\item{sleep}{sleep between queries in seconds, a double.}
 }
 \description{
 Downloads supplementary or MINiML formatted family files from Entrez GEO repository.
