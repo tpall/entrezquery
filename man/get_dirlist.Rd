@@ -4,16 +4,23 @@
 \alias{get_dirlist}
 \title{Download file list from Entrez GEO repository ftp directory}
 \usage{
-get_dirlist(Accession)
+get_dirlist(Accession, dir)
 }
 \arguments{
 \item{Accession}{GEO Accession, a charcter string.}
+
+\item{dir}{Download family    format, a character vector.}
 }
 \description{
-Downloads list of supplementary or MINiML formatted family file names from Entrez GEO repository.
+Downloads list of file names from Entrez GEO repository.
+ - "suppl" Supplementary files
+ - "soft" SOFT formatted family file(s)
+ - "miniml" MINiML formatted family file(s)
+ - "matrix" Series Matrix File(s)
 }
 \examples{
-resp <- get_dirlist("GSE100206")
+# Download supplementary and matrix file names
+resp <- get_dirlist("GSE100206", dir = c("matrix", "suppl"))
 resp
 
 }

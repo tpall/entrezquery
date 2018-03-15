@@ -123,29 +123,35 @@ download_gsefiles <- function(gsefiles, dest = ".", verbose = FALSE) {
 
 #' @title Download file list from Entrez GEO repository ftp directory
 #'
-#' @description Downloads list of supplementary or MINiML formatted family file names from Entrez GEO repository.
+#' @description Downloads list of file names from Entrez GEO repository.
+#'  - "suppl" Supplementary files
+#'  - "soft" SOFT formatted family file(s)
+#'  - "miniml" MINiML formatted family file(s)
+#'  - "matrix" Series Matrix File(s)
 #'
 #' @param Accession GEO Accession, a charcter string.
+#' @param dir Download family	format, a character vector.
 #'
 #' @import crul
 #' @importFrom purrr map set_names
 #' @importFrom dplyr bind_rows %>%
 #'
 #' @examples
-#' resp <- get_dirlist("GSE100206")
+#' # Download supplementary and matrix file names
+#' resp <- get_dirlist("GSE100206", dir = c("matrix", "suppl"))
 #' resp
 #'
 #' @export
 #'
-get_dirlist <- function(Accession) {
+get_dirlist <- function(Accession, dir) {
   ftplink <- file.path("ftp://ftp.ncbi.nlm.nih.gov/geo/series",
                        sub("[0-9]{3}$", "nnn", Accession),
                        Accession)
-  cc <- Async$new(urls = file.path(ftplink, c("soft/", "suppl/")))
+  cc <- Async$new(urls = file.path(ftplink, paste0(dir, "/")))
   res <- cc$get()
   purrr::map(res, ~.x$parse("UTF-8")) %>%
     purrr::map(munge_dirlist) %>%
-    purrr::set_names(c("soft", "suppl")) %>%
+    purrr::set_names(dir) %>%
     dplyr::bind_rows(.id = "type")
 }
 
