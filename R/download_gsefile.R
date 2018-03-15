@@ -29,9 +29,19 @@ download_gsefile <- function(gsefile, dest = ".", verbose = FALSE) {
                        Accession)
 
   # Update file paths with subdir names
-  filepath <- dplyr::if_else(stringr::str_detect(gsefile, "family.soft.gz$"),
-                             file.path("soft", gsefile),
-                             file.path("suppl", gsefile))
+  filepath <- file.path("suppl", gsefile)
+
+  if (stringr::str_detect(gsefile, "family.soft.gz$")) {
+    filepath <- file.path("soft", gsefile)
+  }
+
+  if (stringr::str_detect(gsefile, "series_matrix.txt.gz$")) {
+    filepath <- file.path("matrix", gsefile)
+  }
+
+  if (stringr::str_detect(gsefile, "family.xml.tgz$")) {
+    filepath <- file.path("miniml", gsefile)
+  }
 
   # Test if file exist locally
   localfiles <- file.exists(file.path(dest, filepath))
