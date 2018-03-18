@@ -80,18 +80,19 @@ get_qsums <- function(uid, db, ...) {
 #' @description Returns entrez document summaries for UIDs using esummary API.
 #'
 #' @inheritParams get_qsums
+#' @param chunksize number of uids simultaneously queried, integer. Longer vectors will be split into smaller chunks.
 #' @return A list of document summaries of class "xml_document" "xml_node".
 #'
 #' @importFrom httr content
 #' @export
 #'
-get_docsums <- function(uid, db, ...) {
+get_docsums <- function(uid, db, chunksize = 100, ...) {
 
   # Split UIDs into chunks of size max 500
-  UID_chunks <- split(uid, ceiling(seq_along(uid) / 100))
+  UID_chunks <- split(uid, ceiling(seq_along(uid) / chunksize))
 
   ## Run query chunkwise
-  qsums <- lapply(UID_chunks, get_qsums, db = db)
+  qsums <- lapply(UID_chunks, get_qsums, db = db, ...)
 
   ## Extract html content from query results
   lapply(qsums, httr::content)

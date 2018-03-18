@@ -4,12 +4,14 @@
 \alias{get_docsums}
 \title{Get entrez document summaries for UIDs}
 \usage{
-get_docsums(uid, db, ...)
+get_docsums(uid, db, chunksize = 100, ...)
 }
 \arguments{
 \item{uid}{Character vector of UIDs.}
 
 \item{db}{Entrez database, defaults to "gds" == GEO.}
+
+\item{chunksize}{number of uids simultaneously queried, integer. Longer vectors will be split into smaller chunks.}
 
 \item{...}{Further arguments to esummary API.}
 }
