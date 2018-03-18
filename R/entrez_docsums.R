@@ -88,7 +88,7 @@ get_qsums <- function(uid, db, ...) {
 get_docsums <- function(uid, db, ...) {
 
   # Split UIDs into chunks of size max 500
-  UID_chunks <- split(uid, ceiling(seq_along(uid) / 500))
+  UID_chunks <- split(uid, ceiling(seq_along(uid) / 100))
 
   ## Run query chunkwise
   qsums <- lapply(UID_chunks, get_qsums, db = db)
