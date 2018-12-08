@@ -4,7 +4,8 @@
 \alias{entrez_docsums}
 \title{Query entrez database}
 \usage{
-entrez_docsums(query = NULL, uid = NULL, db = "gds", retmax = 500, ...)
+entrez_docsums(query = NULL, uid = NULL, db = "gds", retmax = 500,
+  ...)
 }
 \arguments{
 \item{query}{A GEO query string (optional).}

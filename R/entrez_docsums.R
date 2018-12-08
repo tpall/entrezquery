@@ -57,11 +57,12 @@ get_ids <- function(query, db, retmax = 500, ...) {
 #'
 #' @param uid Character vector of UIDs.
 #' @param db Entrez database, defaults to "gds" == GEO.
+#' @param wait The time interval to wait after request, in seconds.
 #' @param ... Further arguments to esummary API.
 #'
 #' @importFrom httr GET
 #'
-get_qsums <- function(uid, db, ...) {
+get_qsums <- function(uid, db, wait = 0, ...) {
 
   ## Construct esummary API url
   esummary <- "esummary.fcgi"
@@ -72,7 +73,11 @@ get_qsums <- function(uid, db, ...) {
   uid_string <- paste(uid, collapse = ",")
 
   ## Run GET request
-  httr::GET(url, query = list(db = db, id = uid_string, ...))
+  r <- httr::GET(url, query = list(db = db, id = uid_string, ...))
+
+  ## Use wait when running multiple requests and hit server limit
+  Sys.sleep(wait)
+  return(r)
 }
 
 #' @title Get entrez document summaries for UIDs
@@ -111,21 +116,15 @@ get_docsums <- function(uid, db, chunksize = 100, ...) {
 extract_docsums <- function(xmldoc) {
 
   ## Parse xml
-  d <- XML::xmlParse(xmldoc)
-  d <- XML::xmlRoot(d)
-
-  ## Extract colnames
-  DocSum <- d[1]$DocSum
-  items <- XML::xmlSApply(DocSum, XML::xmlGetAttr, name = "Name")
-  items <- unlist(items)
-  items <- c("Id", items)
-  items <- unname(items)
-
-  ## Extract data and assign colnames
-  d <- XML::xmlSApply(d, function(x) XML::getChildrenStrings(x))
-  d <- dplyr::as_data_frame(t(d))
-  colnames(d) <- items
-  return(d)
+  children <- xml2::xml_children(xmldoc)
+  grandchildren <- purrr::map(children, xml2::xml_children)
+  values <- purrr::map(grandchildren, xml2::xml_text)
+  attrs <- purrr::map(grandchildren, xml2::xml_attr, attr = "Name")
+  names <- purrr::map(grandchildren, xml2::xml_name)
+  attrs <- purrr::map2(attrs, names, ~{i <- which(is.na(.x)); .x[i] <- .y[i]; .x})
+  values_with_names <- purrr::map2(values, attrs, ~{names(.x) <- .y; .x})
+  dataframes <- purrr::map(values_with_names, ~dplyr::as_data_frame(as.list(.x)))
+  dplyr::bind_rows(dataframes)
 }
 
 #' @title Query entrez database
@@ -168,7 +167,7 @@ entrez_docsums <- function(query = NULL, uid = NULL, db = "gds", retmax = 500, .
   sumcont <- get_docsums(uid = uid, db = db, ...)
 
   # Extract document summaries.
-  # Gateway error in previous step may fuck up this step!!!,
+  # Error in previous step may fuck up this step!,
   # if this occurs, please just rerun.
   docsums <- lapply(sumcont, extract_docsums)
   dplyr::bind_rows(docsums)

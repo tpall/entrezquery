@@ -4,12 +4,14 @@
 \alias{get_qsums}
 \title{Run GET request on Entrez database with UIDs.}
 \usage{
-get_qsums(uid, db, ...)
+get_qsums(uid, db, wait = 0, ...)
 }
 \arguments{
 \item{uid}{Character vector of UIDs.}
 
 \item{db}{Entrez database, defaults to "gds" == GEO.}
+
+\item{wait}{The time interval to wait after request, in seconds.}
 
 \item{...}{Further arguments to esummary API.}
 }
