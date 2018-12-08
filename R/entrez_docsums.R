@@ -169,6 +169,16 @@ entrez_docsums <- function(query = NULL, uid = NULL, db = "gds", retmax = 500, .
   # Extract document summaries.
   # Error in previous step may fuck up this step!,
   # if this occurs, please just rerun.
-  docsums <- lapply(sumcont, extract_docsums)
-  dplyr::bind_rows(docsums)
+  safely_extract_docsums <- purrr::safely(extract_docsums)
+  docsums <- purrr::map(sumcont, safely_extract_docsums)
+  docsums <- purrr::map(docsums, "result")
+
+  ## Check if any of the chunks has failed
+  fails <- purrr::map_lgl(docsums, is.null)
+  if (any(fails)) warning("Some of the document summaries failed to retrieve.")
+
+  ## return good chunks
+  good_docsums <- docsums[which(!fails)]
+  dplyr::bind_rows(good_docsums)
 }
+
